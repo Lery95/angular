@@ -1,0 +1,89 @@
+<nav class="navbar navbar-light bg-primary">
+    <div class="container-fluid">
+        <h1>Customer Profile CRUD</h1>
+        <div class="d-flex">
+            <button (click)="onCreate()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                class="btn btn-success">Add
+                Customer</button>
+        </div>
+    </div>
+</nav>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Address</th>
+            <th scope="col">PostCode</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let customer of allCustomers | async">
+            <td>{{customer.CustName}}</td>
+            <td>{{customer.CustEmail}}</td>
+            <td>{{customer.Address}}</td>
+            <td>{{customer.PostCode}}</td>
+            <td>{{customer.PhoneNumber}}</td>
+            <td>
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" class="btn btn-info"
+                    (click)="loadCustomer(customer)">Edit</button>
+                <button type="button" class="btn btn-danger mx-3"
+                    (click)="deleteCustomer(customer.CustId)">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Customer Profile</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="customerForm">
+                    <div class="mb-3">
+                        <label for="customerName" class="form-label">Name</label>
+                        <input type="text" formControlName="CustName" class="form-control" id="customerName">
+                        <small *ngIf="customerForm.get('CustName')?.invalid && customerForm.get('CustName')?.touched" class="text-danger">Name is Required</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="customerEmail" class="form-label">Email</label>
+                        <input type="email" formControlName="CustEmail" class="form-control" id="customerEmail">
+                        <small *ngIf="customerForm.get('CustEmail')?.invalid && customerForm.get('CustEmail')?.touched" class="text-danger">Invalid Email</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="address" for="address">Address</label>
+                        <textarea formControlName="Address" class="form-control" id="address" rows="3"></textarea>
+                        <small *ngIf="customerForm.get('Address')?.invalid && customerForm.get('Address')?.touched" class="text-danger">Address is Required</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="postcode" for="postcode">Postcode</label>
+                        <input formControlName="PostCode" type="text" class="form-control" id="postcode">
+                        <small *ngIf="customerForm.get('PostCode')?.invalid && customerForm.get('PostCode')?.touched" class="text-danger">Postcode is Required</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="phonenumber" for="phonenumber">Phone Number</label>
+                        <input formControlName="PhoneNumber" type="text" class="form-control" id="phonenumber">
+                        <small *ngIf="customerForm.get('PhoneNumber')?.invalid && customerForm.get('PhoneNumber')?.touched" class="text-danger">Phone number is Required(minimum length of 10, numbers only allowed)</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button *ngIf="showAdd" type="button" (click)="createCustomer(customerForm.value)"
+                    class="btn btn-primary" [disabled]="!customerForm.valid">Add</button>
+                <button *ngIf="showUpdate" type="button" (click)="updateCustomer(customerForm.value)"
+                    class="btn btn-primary" [disabled]="!customerForm.valid">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
